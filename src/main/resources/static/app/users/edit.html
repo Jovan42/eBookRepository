@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/css/w3.css">
+<script type="text/javascript" src="/js/jQuery.js"></script>
+<script type="text/javascript" src="/js/usersEdit.js"></script>
+<body>
+	<button class="w3-margin">Back</button>
+	<form class="w3-container w3-margin w3-pale-green">
+
+		<label  >First Name</label>
+		<input class="w3-input w3-margin-bottom" id="firstname" type="text">
+
+		<label class="w3-margin-top">Last Namel</label>
+		<input class="w3-input w3-margin-bottom" id="lastname" type="text">
+		
+		<label>Username</label>
+		<input class="w3-input w3-margin-bottom" id="username" type="text">
+		
+		<label>Password</label>
+		<input class="w3-input w3-margin-bottom" id="password" type="password">
+		
+		<label>Type</label>
+		<select class="w3-select w3-margin-bottom"  id="type" name="option">
+	  		<option value="1">Subscriber</option>
+ 			<option value="2">Administrator</option>
+		</select>
+		<button	type="button" id="add" class="w3-button w3-green w3-margin" onclick="addUser(event)">Add</button>
+	</form>	
+	
+	
+	
+
+</body>
+</html>
