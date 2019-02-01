@@ -1,16 +1,9 @@
 package ebook.repository.eBook.Repository.pojo;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -30,10 +23,10 @@ public class User {
 	@Column(columnDefinition = "NVARCHAR(30)")
 	private String type;
 
-	@ManyToMany(cascade = { CascadeType.ALL })
+	/*@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(name = "user_categories", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "category_id") })
-	private List<Category> categories = new ArrayList<Category>();
+			@JoinColumn(name = "category_id") })*/
+	//private List<Category> categories = new ArrayList<Category>();
 
 	public int getId() {
 		return id;
@@ -82,12 +75,12 @@ public class User {
 	public void setType(String type) {
 		this.type = type;
 	}
-
+/*
 	public List<Category> getCategories() {
 		return categories;
 	}
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
-	}
+	}*/
 }

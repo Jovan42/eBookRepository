@@ -3,9 +3,14 @@ package ebook.repository.eBook.Repository.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Category")
@@ -15,20 +20,23 @@ public class Category {
 	private int id;
 	@Column(columnDefinition = "NVARCHAR(30)")
 	private String name;
+
+	/*@OneToMany(
+		mappedBy="category",
+		cascade = CascadeType.ALL,
+		orphanRemoval = true,
+		fetch = FetchType.EAGER)*/
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinColumn(name = "category_id")
+	private List<EBook> eBooks = new ArrayList<>();
 	
-	@ManyToMany(mappedBy = "categories")
-	private List<EBook> eBooks = new ArrayList<EBook>();
-	
-	@JsonIgnore
-	@ManyToMany(mappedBy = "categories")
-	private List<User> users = new ArrayList<User>();
 	public int getId() {
 		return id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
-	}
+	}	
 
 	public String getName() {
 		return name;
@@ -45,14 +53,5 @@ public class Category {
 	public void seteBooks(List<EBook> eBooks) {
 		this.eBooks = eBooks;
 	}
-
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-	
 
 }

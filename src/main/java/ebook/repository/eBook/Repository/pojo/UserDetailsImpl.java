@@ -35,7 +35,7 @@ public class UserDetailsImpl implements UserDetails {
 	        	  authorities.add(new SimpleGrantedAuthority("ADMIN"));
 	        }
 	        if(user.getType().equals("SUB"))
-	        	 authorities.add(new SimpleGrantedAuthority("SUB" ));
+	        	 authorities.add(new SimpleGrantedAuthority("SUB"));
 
 	        return authorities;
 

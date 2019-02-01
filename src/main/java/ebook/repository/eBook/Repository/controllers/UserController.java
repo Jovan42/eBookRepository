@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import ebook.repository.eBook.Repository.pojo.User;
 import ebook.repository.eBook.Repository.pojo.UserDetailsImpl;
 import ebook.repository.eBook.Repository.services.IUserService;
@@ -31,24 +30,28 @@ public class UserController {
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
+	 
 	public List<User> get() {
 		return userService.get();
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@RequestMapping(value = "/users/{userName}", method = RequestMethod.GET, produces = "application/json")
+	 
 	public User get(@PathVariable String userName) {
 		return userService.get(userName);
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@RequestMapping(value = "/users", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	 
 	public User post(@RequestBody User user) {
 		return userService.add(user);
 	}
 
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@RequestMapping(value = "/users/{userName}", method = RequestMethod.DELETE)
+	 
 	public boolean delete(@PathVariable String userName) {
 		return userService.delete(userName);
 	}
@@ -60,13 +63,19 @@ public class UserController {
 		else return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
 	}
 
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	public ResponseEntity<Boolean> logout() {
+		userService.logout();
+		return new ResponseEntity<>(true, HttpStatus.OK);
+		
+	}
+
 	@PreAuthorize("hasAuthority('SUB')")
 	@RequestMapping(value = "/changePassword", method = RequestMethod.PUT)
 	public ResponseEntity<Boolean> changePassword(@RequestBody User u) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsImpl logged = (UserDetailsImpl) auth.getPrincipal();
 		
-	
 		return new ResponseEntity<>(userService.changePassword(logged.getUsername(), u.getUserPassword()),	HttpStatus.OK);
 	}
 
@@ -89,18 +98,18 @@ public class UserController {
 
 	}
 	
-	@RequestMapping(value = "/loggedIn", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/loggedIn", method = RequestMethod.GET, produces = "application/json") 
 	public ResponseEntity<User> loggedIn() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.getName().equals("anonymousUser")) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		User u =  this.get(auth.getName());
 		u.setUserPassword(""); 
 		return new ResponseEntity<>(u, HttpStatus.OK);
-
 	}
 	
 	@PreAuthorize("hasAuthority('SUB')")
 	@RequestMapping(value = "users/changeData", method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+	 
 	public ResponseEntity<User> changeData(@RequestBody User user) {
 	
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

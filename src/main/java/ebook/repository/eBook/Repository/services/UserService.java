@@ -30,14 +30,18 @@ public class UserService implements IUserService {
 	@Override
 	public List<User> get() {
 		EntityManager em = emf.createEntityManager();
-		return em.createQuery("FROM User", User.class).getResultList();
+		List<User> res = em.createQuery("FROM User", User.class).getResultList();
+		em.close();
+		return res;
 	}
 
 	@Override
 	public User get(Serializable userName) {
 		EntityManager em = emf.createEntityManager();
-		return em.createQuery("FROM User where username = :username", User.class).setParameter("username", userName)
+		User res =  em.createQuery("FROM User where username = :username", User.class).setParameter("username", userName)
 				.getResultList().get(0);
+		em.close();
+		return res;
 		// return em.find(User.class, userName);
 	}
 
@@ -47,16 +51,20 @@ public class UserService implements IUserService {
 		em.getTransaction().begin();
 		em.persist(user);
 		em.getTransaction().commit();
-		return user;
+		User res = user;
+		em.close();
+		return res;
 	}
 
-	@Override
+	@Override 
 	public User update(User user) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		User savedUser = em.merge(user);
 		em.getTransaction().commit();
+		em.close();
 		return savedUser;
+		
 	}
 
 	@Override
@@ -67,6 +75,7 @@ public class UserService implements IUserService {
 		em.getTransaction().begin();
 		em.remove(em.contains(u) ? u : em.merge(u));
 		em.getTransaction().commit();
+		em.close();
 		return true;
 	}
 
@@ -81,21 +90,29 @@ public class UserService implements IUserService {
 			Authentication authentication = new UsernamePasswordAuthenticationToken(userD, null,
 					userD.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
 			return true;
 		} else
 			return false;
-
 	}
 
 	@Override
+	public boolean logout() {
+		SecurityContextHolder.getContext().setAuthentication(null);
+		return true;
+	}
+
+
+	@Override 
 	public boolean changePassword(String username, String password) {
 		User u = this.get(username);
 		u.setUserPassword(password);
-		if (this.update(u) != null)
+		if (this.update(u) != null) {
 			return true;
-		else
+		}
+		else {
 			return false;
-
+		}
 	}
 
 }

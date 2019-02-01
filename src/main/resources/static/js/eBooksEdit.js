@@ -6,6 +6,7 @@ $(document).ready(function() {
 			$('#publicationyear').val(data['publicationyear']);
 			$('#filename').val(data['filename']);
 			$('#add').html('Save');
+			$('#file').css('display', 'none');
 		}).fail(function(xhr, status, error) {
 			alert('U have no rights to access this data');
 		});
@@ -22,8 +23,22 @@ $(document).ready(function() {
 	
 });
 
-
-function addBook(event) {	
+function onFileLoad(file){
+	fileData = $(file)[0].files[0];
+	if(fileData['name'] != null)
+		$('#title').val(fileData['name']);
+	if(fileData['author'] != null)
+		$('#author').val(fileData['author']);
+	if(fileData['keyWords'] != null)
+		$('#keyWords').val(fileData['keyWords']);
+	if(fileData['lastModified'] != null) {
+		date = new Date(fileData['lastModified']);
+		$('#publicationyear').val(date.getFullYear());
+	}
+}
+function addBook(event) {
+	event.preventDefault();	
+	console.log($('#categories').find(":selected").attr("data-id"))
 	if(getUrlParameter('id') == null) {
 		$.ajax({
 			url : '/eBooks/',
@@ -34,11 +49,13 @@ function addBook(event) {
 				title : $('#title').val(),
 				author : $('#author').val(),
 				publicationyear : $('#publicationyear').val(),
-				filename : $('#filename').val(),
-				category: $('#categories').find(":selected").attr("data-id")
+				filename: $('#file')[0].files[0]['name'],
+				keyWords: $('#keyWords').val(),
+				category_id: $('#categories').find(":selected").attr("data-id")
 			}),
 			success : function(response) {
-				window.location.href = '/app/ebooks/all.html';
+				$('#form').submit();
+			
 			},
 			error : function(request, message, error) {
 				$('#logginError').show();
@@ -55,11 +72,12 @@ function addBook(event) {
 				title : $('#title').val(),
 				author : $('#author').val(),
 				publicationyear : $('#publicationyear').val(),
-				filename : $('#filename').val(),
-				category: $('#categories').find(":selected").attr("data-id")
+				keyWords: $('#keyWords').val(),
+				category_id: $('#categories').find(":selected").attr("data-id")
 			}),
 			success : function(response) {
 				alert('eBook data changed');
+
 				window.location.href = '/app/eBooks/edit.html?id=' + getUrlParameter('id');
 			},
 			error : function(request, message, error) {
@@ -67,7 +85,7 @@ function addBook(event) {
 			}
 		});
 	}
-	event.preventDefault();
+
 }
 
 

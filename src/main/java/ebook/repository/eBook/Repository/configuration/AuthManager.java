@@ -28,7 +28,7 @@ public class AuthManager extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		// TODO Auto-generated method stub
+		
 		// super.configure(auth);
 
 	}

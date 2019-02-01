@@ -24,13 +24,19 @@ public class CategoryService implements ICategoryService {
 	@Override
 	public List<Category> get() {
 		EntityManager em = emf.createEntityManager();
-		return em.createQuery("FROM Category", Category.class).getResultList();
+		List<Category> res = em.createQuery("FROM Category", Category.class).getResultList();
+		em.close();
+		return res;
 	}
+
+	
 
 	@Override
 	public Category get(Serializable id) {
 		EntityManager em = emf.createEntityManager();
-		return em.find(Category.class, id);
+		Category res = em.find(Category.class, id);
+		em.close();
+		return res;
 	}
 
 	@Override
@@ -39,6 +45,7 @@ public class CategoryService implements ICategoryService {
 		em.getTransaction().begin();
 		em.persist(category);
 		em.getTransaction().commit();
+		em.close();
 		return category;
 	}
 
@@ -46,9 +53,13 @@ public class CategoryService implements ICategoryService {
 	public Category update(Category category) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		Category savedCategory = em.merge(category);
+		Category oldData = get(category.getId());
+		oldData.setName(category.getName());
+		oldData = em.merge(oldData);
+
 		em.getTransaction().commit();
-		return savedCategory;
+		em.close();
+		return oldData;		
 	}
 
 	@Override
@@ -57,6 +68,7 @@ public class CategoryService implements ICategoryService {
 		em.getTransaction().begin();
 		em.remove(em.find(Category.class, id));
 		em.getTransaction().commit();
+		em.close();
 		return true;
 	}
 }

@@ -23,7 +23,8 @@ public class CategoryController {
 		this.categoryService = categoryService;
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
+	
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
 	public List<Category> get() {
 		return categoryService.get();
 	}
@@ -52,4 +53,6 @@ public class CategoryController {
 	public boolean delete(@PathVariable int id) {
 		return categoryService.delete(id);
 	}
+
+	
 }

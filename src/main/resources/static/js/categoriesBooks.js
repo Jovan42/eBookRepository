@@ -1,24 +1,18 @@
 $(document).ready(function() {
 	show = ' style="display:none;" ';
-	download = ' style="display:none;" '
 	$.get("/loggedIn").done(function(data) {
-		if(data['type'] == 'ADMIN') {
-			show = '';
-			download = '';
-		}
-		if(data['type'] == 'SUB') {
-			download = '';
-		}
-		showBooks(show, download)
+		if(data['type'] == 'ADMIN');
+			show = ''
+		showBooks(show)
 	}).fail(function(xhr, status, error) {
-		showBooks(show, download);
+		showBooks(show);
 	});
 
 });
 
-function showBooks(show, download){
+function showBooks(show){
 	console.log(show)
-	$.get("/eBooks").done(function(data) {
+	$.get('/eBooks/cat/' + getUrlParameter('id') + '/').done(function(data) {
 		console.log(data)
 		usersDiv = $('#users');
 		$.each(data, function(i, item) {
@@ -30,14 +24,10 @@ function showBooks(show, download){
 					 '			<p>{{publicationyear}}</p>' +
 					 '			<button class="w3-button w3-green w3-margin-bottom" data-id ="{{id}}" {{show}} onclick="editUser(event, this)">Edit</button>' +
 					 '			<button class="w3-button w3-red w3-margin-bottom" data-id ="{{id}}" {{show}} onclick="deleteUser(event, this)">Delete</button>' +
-					 '			<button class="w3-button w3-yellow w3-margin-bottom" data-id ="{{id}}" {{download}} onclick="downloadBook(event, this)">Download</button>' +
 					 '	</div>' +
 					 '</div>' +
 					 '</div>';
-			user = user.replace('{{title}}', item['title']).replace('{{author}}', item['author'])
-			.replace('{{publicationyear}}', item['publicationyear']).replace('{{id}}', item['id'])
-			.replace('{{id}}', item['id']).replace('{{id}}', item['id']).replace('{{show}}', show)
-			.replace('{{show}}', show).replace('{{download}}', download);
+            user = user.replace('{{title}}', item['title']).replace('{{author}}', item['author']).replace('{{publicationyear}}', item['publicationyear']).replace('{{id}}', item['id']).replace('{{id}}', item['id']).replace('{{show}}', show).replace('{{show}}', show);
             usersDiv.append($.parseHTML(user));
 		});
 	}).fail(function(xhr, status, error) {
@@ -47,11 +37,6 @@ function showBooks(show, download){
 }
 function editUser(event, div) {
     window.location.href = '/app/eBooks/edit.html?id=' + $(div).attr("data-id");
-    event.preventDefault();
-}
-
-function downloadBook(event, div) {
-    window.location.href = '/eBooks/'+ $(div).attr("data-id") + '/download';
     event.preventDefault();
 }
 
@@ -73,3 +58,19 @@ function deleteUser(event, div) {
 }
 
 
+
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};

@@ -6,5 +6,5 @@ import ebook.repository.eBook.Repository.pojo.Category;
 
 
 public interface ICategoryService extends IGenericService<Category, Serializable> {
-
+   
 }
