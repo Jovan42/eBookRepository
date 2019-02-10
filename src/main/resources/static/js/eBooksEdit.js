@@ -40,6 +40,8 @@ function addBook(event) {
 	event.preventDefault();	
 	console.log($('#categories').find(":selected").attr("data-id"))
 	if(getUrlParameter('id') == null) {
+
+		
 		$.ajax({
 			url : '/eBooks/',
 			type : 'POST',
@@ -50,7 +52,7 @@ function addBook(event) {
 				author : $('#author').val(),
 				publicationyear : $('#publicationyear').val(),
 				filename: $('#file')[0].files[0]['name'],
-				keyWords: $('#keyWords').val(),
+				keywords: $('#keywords').val(),
 				category_id: $('#categories').find(":selected").attr("data-id")
 			}),
 			success : function(response) {

@@ -1,9 +1,12 @@
 package ebook.repository.eBook.Repository.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import ebook.repository.eBook.Repository.lucene.Indexer;
+import ebook.repository.eBook.Repository.lucene.model.IndexUnit;
 import ebook.repository.eBook.Repository.pojo.EBook;
 import ebook.repository.eBook.Repository.services.IeBookService;
 
@@ -64,14 +69,16 @@ public class EBookController {
 
 	@PreAuthorize("hasAuthority('SUB')")
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public boolean upload(@RequestParam("file") MultipartFile file) {
+	public boolean upload(@RequestParam("file") MultipartFile file,
+						  @RequestParam("title") String title,
+						  @RequestParam("keywords") String keywords) {
 		try {
 			
            
 		byte[] bytes = file.getBytes();
 		Path path = Paths.get("C:\\a\\" + file.getOriginalFilename());
 		Files.write(path, bytes);
-
+		indexUploadedFile("C:\\a\\" + file.getOriginalFilename(), title, keywords);
 		return true;
 
         } catch (IOException e) {
@@ -90,4 +97,14 @@ public class EBookController {
     	return ResponseEntity.ok().body(resource);
 	}
 	
+	private void indexUploadedFile(String fileName, String title, String keywords) throws IOException{
+
+		if(fileName != null){
+			IndexUnit indexUnit = Indexer.getInstance().getHandler(fileName).getIndexUnit(new File(fileName));
+			indexUnit.setTitle(title);
+			indexUnit.setKeywords(new ArrayList<String>(Arrays.asList(keywords.split(" "))));
+			Indexer.getInstance().add(indexUnit.getLuceneDocument());
+		}
+		
+	}
 }

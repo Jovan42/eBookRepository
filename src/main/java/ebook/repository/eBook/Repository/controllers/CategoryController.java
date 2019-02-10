@@ -1,5 +1,6 @@
 package ebook.repository.eBook.Repository.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,11 @@ public class CategoryController {
 	public boolean delete(@PathVariable int id) {
 		return categoryService.delete(id);
 	}
-
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public <LuceneFileSearch> void search(@PathVariable int id) throws IOException {
+		
+		 
+	}
 	
 }
