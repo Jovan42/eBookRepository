@@ -24,6 +24,14 @@ public class EBookService implements IeBookService {
 	public void setEmf(EntityManagerFactory emf) {
 		this.emf = emf;
 	}
+	@Override
+	public EBook getByFilename(String filename) {
+		EntityManager em = emf.createEntityManager();
+		EBook res =  em.createQuery("FROM EBook where filename = :filename", EBook.class).setParameter("filename", filename)
+				.getResultList().get(0);
+		em.close();
+		return res;
+	}
 
 	@Override
 	public List<EBook> getForCategoty(int id) {

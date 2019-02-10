@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.lucene.search.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ebook.repository.eBook.Repository.lucene.Indexer;
 import ebook.repository.eBook.Repository.lucene.model.IndexUnit;
+import ebook.repository.eBook.Repository.lucene.model.RequiredHighlight;
+import ebook.repository.eBook.Repository.lucene.model.SimpleQuery;
+import ebook.repository.eBook.Repository.lucene.search.QueryBuilder;
+import ebook.repository.eBook.Repository.lucene.search.ResultRetriever;
 import ebook.repository.eBook.Repository.pojo.EBook;
 import ebook.repository.eBook.Repository.services.IeBookService;
 
@@ -95,6 +100,36 @@ public class EBookController {
 		ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
 
     	return ResponseEntity.ok().body(resource);
+	}
+
+	@RequestMapping(value = "/searchTitle/{term}", method = RequestMethod.GET, produces = "application/json")
+	public List<EBook> searchTitle(@PathVariable String term) throws Exception {
+		List<EBook> ebookList = new ArrayList<>();
+		for (String filename : search("title", term)) {
+			ebookList.add(eBookService.getByFilename(filename));	
+		} 
+		return ebookList;
+	}
+
+	@RequestMapping(value = "/searchText/{term}", method = RequestMethod.GET, produces = "application/json")
+	public List<EBook> searchText(@PathVariable String term) throws Exception {
+		List<EBook> ebookList = new ArrayList<>();
+		for (String filename : search("text", term)) {
+			ebookList.add(eBookService.getByFilename(filename));	
+		} 
+		return ebookList;
+	}
+	public List<String> search(String field, String term) throws Exception {
+		SimpleQuery simpleQuery = new SimpleQuery();
+		simpleQuery.setField(field);
+		simpleQuery.setValue(term);
+		
+		Query query= QueryBuilder.buildQuery(simpleQuery.getField(), simpleQuery.getValue());
+		List<RequiredHighlight> rh = new ArrayList<RequiredHighlight>();
+		rh.add(new RequiredHighlight(simpleQuery.getField(), simpleQuery.getValue()));
+		List<String> results = ResultRetriever.getResults(query, rh);			
+		System.out.println(results.size());
+		return results;
 	}
 	
 	private void indexUploadedFile(String fileName, String title, String keywords) throws IOException{

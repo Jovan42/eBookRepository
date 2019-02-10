@@ -7,8 +7,17 @@
 <script type="text/javascript" src="/js/eBooksAll.js"></script>
 <script type="text/javascript" src="/js/header.js"></script>
 <body>
-	<button class="w3-margin">Back</button>
-	<button class="w3-margin" onclick="loutUser(event)">Log out</button>
+	<button class="w3-margin w3-yellow w3-button"  onclick="window.location.href = '/app/menu.html'">Back</button>
+	<button class="w3-margin w3-red w3-button"  onclick="loutUser(event)">Log out</button>
+	<form class="w3-container w3-margin w3-pale-green">
+
+		<label  >Search text</label>
+		<input class="w3-input w3-margin-bottom" id="text" type="text">
+
+		<button	type="button" id="sTitle" class="w3-button w3-green w3-margin" onclick="searchTitle(event)">Search Title</button>
+		<button	type="button" id="sText" class="w3-button w3-green w3-margin" onclick="searchText(event)">Search Text</button>
+
+	</form>	
 	<div class="w3-container w3-center" id="users">
 	
 	</div>

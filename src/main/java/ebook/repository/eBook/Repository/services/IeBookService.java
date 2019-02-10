@@ -7,4 +7,5 @@ import ebook.repository.eBook.Repository.pojo.EBook;
 
 public interface IeBookService extends IGenericService<EBook, Serializable>{
     public List<EBook> getForCategoty(int id);
+    public EBook getByFilename(String filename);
 }

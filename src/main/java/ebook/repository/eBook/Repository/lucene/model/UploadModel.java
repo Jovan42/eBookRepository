@@ -3,8 +3,6 @@ package ebook.repository.eBook.Repository.lucene.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-
 public class UploadModel {
 
     private String title;
